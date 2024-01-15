@@ -1,0 +1,134 @@
+class ShoppingCart
+    cartItems: ArrayList of Item
+
+    method main
+        scanner: Scanner object
+        cart: ShoppingCart object
+
+        while true
+            display "Shopping Cart Menu:"
+            display "1. Add item"
+            display "2. Remove item"
+            display "3. View cart"
+            display "4. Checkout"
+            display "5. Exit"
+
+            input: String = trimmed user input
+
+            if input is empty
+                display "Invalid input. Please enter a number."
+                continue to the next iteration of the loop
+
+            try
+                choice: Integer = parse input to Integer
+            catch NumberFormatException
+                display "Invalid input. Please enter a number."
+                continue to the next iteration of the loop
+
+            switch choice
+                case 1
+                    display "Enter item name:"
+                    name: String = read user input
+                    display "Enter item price (RM):"
+                    try
+                        price: Double = parse user input to Double
+                    catch NumberFormatException
+                        display "Invalid price. Please enter a number."
+                        continue to the next iteration of the loop
+                    display "Enter item quantity:"
+                    try
+                        quantity: Integer = parse user input to Integer
+                    catch NumberFormatException
+                        display "Invalid quantity. Please enter a number."
+                        continue to the next iteration of the loop
+                    cart.addToCart(new Item(name, price, quantity))
+                    break
+
+                case 2
+                    display "Enter item name to remove:"
+                    itemName: String = read user input
+                    cart.removeFromCart(itemName)
+                    break
+
+                case 3
+                    cart.displayCart()
+                    break
+
+                case 4
+                    totalCost: Double = cart.calculateTotalCost()
+                    display "Total cost: RM" + totalCost
+                    break
+
+                case 5
+                    display "Menu Exited. See you next time!"
+                    exit the program
+
+                default
+                    display "Invalid choice. Please enter a number between 1 and 5."
+
+                // Consume the newline character after the switch statement
+                read and discard the next line of input
+            end switch
+        end while
+    end method
+
+    method addToCart
+        item: Item object
+        add item to cartItems
+        display "Item added to cart: " + item.getName()
+    end method
+
+    method removeFromCart
+        itemName: String
+        for each item in cartItems
+            if item.getName() equals itemName
+                remove item from cartItems
+                display "Item removed from cart: " + itemName
+                return
+        end for
+        display "Item not found in cart."
+    end method
+
+    method displayCart
+        display "Your Cart:"
+        for each item in cartItems
+            display item.toString()
+    end method
+
+    method calculateTotalCost
+        totalCost: Double = 0
+        for each item in cartItems
+            totalCost += item.getPrice() * item.getQuantity()
+        return totalCost
+    end method
+end class
+
+class Item
+    name: String
+    price: Double
+    quantity: Integer
+
+    // Constructor to initialize name, price, and quantity
+    constructor Item(name: String, price: Double, quantity: Integer)
+        this.name = name
+        this.price = price
+        this.quantity = quantity
+    end constructor
+
+    // Getters and setters
+    method getName
+        return name
+    end method
+
+    method getPrice
+        return price
+    end method
+
+    method getQuantity
+        return quantity
+    end method
+
+    method toString
+        return name + " - $" + price + " x " + quantity + " = RM" + (price * quantity)
+    end method
+end class
